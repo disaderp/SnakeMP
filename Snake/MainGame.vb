@@ -6,11 +6,12 @@ Module MainGame
     Dim thr As Threading.Thread
     Dim thr2 As Threading.Thread
     Public Const Width As Integer = 80
-    Public Const Height As Integer = 30
+    Public Const Height As Integer = 40
     Public points As Integer = 0
     Public p2points As Integer = 0
     Dim nextpos As Tile.Direction
     Public pos As Tile.Direction
+    Public isMP As Boolean = False
     Sub Main()
         Console.SetWindowSize(Width, Height)
         Console.Write("SP or MP?")
@@ -23,6 +24,7 @@ Module MainGame
             thr = New Threading.Thread(AddressOf UpdateSP)
             thr.Start()
         Else
+            isMP = True
             Console.Write("Enter name: ")
             'Items.map.Add(New Item(Rand(0, MainGame.Width), Rand(0, MainGame.Height), 3))
             If Net.connect(Console.ReadLine()) = 1 Then

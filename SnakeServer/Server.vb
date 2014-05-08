@@ -70,8 +70,8 @@ s:
                     End If
 
                     Dim item As String = ""
-                    If Rand(0, 60) = 5 Then
-                        item = Rand(0, 80) & ":" & Rand(0, 29) & ":" & (Rand(0, 10000) Mod 4)
+                    If Rand(0, 20) = 5 Then
+                        item = Rand(0, 80) & ":" & Rand(0, 40) & ":" & (Rand(0, 10000) Mod 4)
                     End If
 
                     Time = 5

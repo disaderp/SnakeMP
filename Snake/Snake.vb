@@ -148,8 +148,9 @@
                         Else
                             MainGame.p2points += 1
                         End If
-
-                        map.Add(New Item(Rand(0, MainGame.Width), Rand(0, MainGame.Height), 3))
+                        If Not isMP Then
+                            map.Add(New Item(Rand(0, MainGame.Width), Rand(0, MainGame.Height), 3))
+                        End If
                         Exit For
                     End If
                     If map(j).Type = Type.Div Then
