@@ -9,16 +9,18 @@ Module Net
 #Else
     Dim server As New IPEndPoint(IPAddress.Parse("188.116.56.69"), 8881)
 #End If
+    Dim ep As IPEndPoint
     Public Wait As Boolean = False
     Public Run As Boolean = True
     Public name As String
     Public p2name As String
+    Dim thr As Threading.Thread
 
     Function connect(name1 As String) As Integer
         client.Send([Default].GetBytes("CONN" & name1), [Default].GetByteCount("CONN" & name1), server)
         client.Client.ReceiveTimeout = 1000000
         Console.WriteLine("Connected. Waiting for second player")
-        Dim mess As String = [Default].GetString(client.Receive(server))
+        Dim mess As String = [Default].GetString(client.Receive(ep))
         If mess = "WAIT" Then
             Console.WriteLine("Server is busy. Reconnecting in 5s")
             Threading.Thread.Sleep(5000)
@@ -34,8 +36,12 @@ Module Net
                 Threading.Thread.Sleep(30)
             End While
             Dim dir As Integer = 0 + MainGame.pos
+r:
             client.Send([Default].GetBytes(dir), [Default].GetByteCount(dir), server)
-            Dim mess As String = [Default].GetString(client.Receive(server))
+            Dim mess As String = [Default].GetString(client.Receive(ep))
+            If mess = "RESENDPLS" Then
+                GoTo r
+            End If
             If mess = "WON" Then
                 Run = False
                 Console.BackgroundColor = ConsoleColor.White
@@ -63,5 +69,13 @@ Module Net
     End Sub
     Sub Lost()
         client.Send([Default].GetBytes("END"), [Default].GetByteCount("END"), server)
+    End Sub
+    Sub KeepConn()
+        While True
+            Try
+                client.Send([Default].GetBytes("HEY"), [Default].GetByteCount("HEY"), server)
+            Catch
+            End Try
+        End While
     End Sub
 End Module

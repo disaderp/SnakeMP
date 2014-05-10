@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports System.Windows.Forms
 
 Module MainGame
     Public snake As Snake
@@ -12,10 +13,18 @@ Module MainGame
     Dim nextpos As Tile.Direction
     Public pos As Tile.Direction
     Public isMP As Boolean = False
+    Dim readkey As Boolean = True
     Sub Main()
         Console.SetWindowSize(Width, Height)
-        Console.Write("SP or MP?")
+        Console.BackgroundColor = ConsoleColor.Black
+        Console.ForegroundColor = ConsoleColor.White
+        Console.Clear()
+        Console.Write("SP/MP?")
+        points = 0
+        p2points = 0
+        readkey = True
         If Console.ReadLine().ToLower.StartsWith("s") Then
+            isMP = False
             Items.map.Add(New Item(Rand(0, MainGame.Width), Rand(0, MainGame.Height), 3))
 
             snake = New Snake(6, Tile.Direction.Right, 40, 12, 210)
@@ -43,7 +52,7 @@ Module MainGame
             thr.Start()
         End If
 
-        While True
+        While readkey
             Dim key As ConsoleKey = Console.ReadKey().Key
 
             If key = ConsoleKey.DownArrow Then
@@ -115,6 +124,14 @@ Module MainGame
                 thr2.Abort()
                 Net.Lost()
                 'Net.Wait = True
+
+
+
+                readkey = False
+                Console.WriteLine("Press ENTER to restart")
+                Console.ReadLine()
+                Application.Restart()
+
                 thr.Abort()
             End If
             If Not p2snake.Alive(snake) Then
@@ -124,6 +141,13 @@ Module MainGame
                 Console.WriteLine("You've won")
                 'thr2.Abort()
                 'Net.Wait = True
+
+
+                readkey = False
+                Console.WriteLine("Press ENTER to restart")
+                Console.ReadLine()
+                Application.Restart()
+
                 thr.Abort()
             End If
 
@@ -178,6 +202,13 @@ Module MainGame
                 Console.SetCursorPosition(0, 0)
                 Console.ForegroundColor = ConsoleColor.Red
                 Console.WriteLine("You've lost")
+
+
+                readkey = False
+                Console.WriteLine("Press ENTER to restart")
+                Console.ReadLine()
+                Application.Restart()
+
                 thr.Abort()
             End If
 

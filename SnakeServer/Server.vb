@@ -8,76 +8,90 @@ Module Server
     Dim names(2) As String
     Dim Running As Boolean = False
     Dim i As Integer = 0
-    Dim Time As Integer = 5
+    Dim Time As Integer = 3
     Dim thr As Threading.Thread
+    Dim getf As Integer = -1
+    Dim ftime As Integer = 6
     Sub Main()
         While True
             Try
                 If Running Then
 f:
-                    If Not Running Then
-                        Continue While
-                    End If
-                    Console.WriteLine("waiting for 1packet")
-                    client = New IPEndPoint(IPAddress.Any, 8881)
-                    Dim p1dir As String = ""
-                    Dim p2dir As String = ""
-                    Dim mess As String = [Default].GetString(server.Receive(client))
-                    If mess = "END" Then
-                        Running = False
-                        i = 0
-                        Console.WriteLine("Match finished##########")
-                        If client.Equals(match(0)) Then
-                            server.Send([Default].GetBytes("WON"), [Default].GetByteCount("WON"), match(1))
-                        ElseIf client.Equals(match(1)) Then
-                            server.Send([Default].GetBytes("WON"), [Default].GetByteCount("WON"), match(0))
+                    Dim mess As String
+                    Dim p1dir As String = "0"
+                    Dim p2dir As String = "0"
+                    Try
+                        If Not Running Then
+                            Continue While
                         End If
-                        Continue While
-                    End If
-                    If client.Equals(match(0)) Then
-                        p1dir = mess
-                    ElseIf client.Equals(match(1)) Then
-                        p2dir = mess
-                    Else
-                        server.Send([Default].GetBytes("WAIT"), [Default].GetByteCount("WAIT"), client)
-                        GoTo f
-                    End If
+                        Console.WriteLine("waiting for 1packet")
+                        client = New IPEndPoint(IPAddress.Any, 8881)                 
+                        mess = [Default].GetString(server.Receive(client))
+                        If mess = "END" Then
+                            Running = False
+                            i = 0
+                            Console.WriteLine("Match finished##########")
+                            If client.Equals(match(0)) Then
+                                server.Send([Default].GetBytes("WON"), [Default].GetByteCount("WON"), match(1))
+                            ElseIf client.Equals(match(1)) Then
+                                server.Send([Default].GetBytes("WON"), [Default].GetByteCount("WON"), match(0))
+                            End If
+                            Continue While
+                        End If
+                        If client.Equals(match(0)) Then
+                            p1dir = mess
+                            getf = 1
+                        ElseIf client.Equals(match(1)) Then
+                            p2dir = mess
+                            getf = 0
+                        Else
+                            server.Send([Default].GetBytes("WAIT"), [Default].GetByteCount("WAIT"), client)
+                            GoTo f
+                        End If
+                    Catch
+                    End Try
 s:
-                    If Not Running Then
-                        Continue While
-                    End If
-                    Console.WriteLine("waiting for 2packet")
-                    client = New IPEndPoint(IPAddress.Any, 8881)
-                    mess = [Default].GetString(server.Receive(client))
-                    If mess = "END" Then
-                        Running = False
-                        i = 0
-                        Console.WriteLine("Match finished##########")
-                        If client.Equals(match(0)) Then
-                            server.Send([Default].GetBytes("WON"), [Default].GetByteCount("WON"), match(1))
-                        ElseIf client.Equals(match(1)) Then
-                            server.Send([Default].GetBytes("WON"), [Default].GetByteCount("WON"), match(0))
+                    Try
+                        If Not Running Then
+                            Continue While
                         End If
-                        Continue While
-                    End If
-                    If client.Equals(match(0)) Then
-                        p1dir = mess
-                    ElseIf client.Equals(match(1)) Then
-                        p2dir = mess
-                    Else
-                        server.Send([Default].GetBytes("WAIT"), [Default].GetByteCount("WAIT"), client)
-                        GoTo s
-                    End If
+                        Console.WriteLine("waiting for 2packet")
+                        client = New IPEndPoint(IPAddress.Any, 8881)
+                        mess = [Default].GetString(server.Receive(client))
+                        If mess = "END" Then
+                            Running = False
+                            i = 0
+                            Console.WriteLine("Match finished##########")
+                            If client.Equals(match(0)) Then
+                                server.Send([Default].GetBytes("WON"), [Default].GetByteCount("WON"), match(1))
+                            ElseIf client.Equals(match(1)) Then
+                                server.Send([Default].GetBytes("WON"), [Default].GetByteCount("WON"), match(0))
+                            End If
+                            Continue While
+                        End If
+                        If client.Equals(match(0)) Then
+                            p1dir = mess
+                        ElseIf client.Equals(match(1)) Then
+                            p2dir = mess
+                        Else
+                            server.Send([Default].GetBytes("WAIT"), [Default].GetByteCount("WAIT"), client)
+                            GoTo s
+                        End If
+                    Catch
+                    End Try
+                    Try
+                        Dim item As String = ""
+                        If Rand(0, 20) = 5 Then
+                            item = Rand(0, 80) & ":" & Rand(0, 40) & ":" & (Rand(0, 10000) Mod 4)
+                        End If
 
-                    Dim item As String = ""
-                    If Rand(0, 20) = 5 Then
-                        item = Rand(0, 80) & ":" & Rand(0, 40) & ":" & (Rand(0, 10000) Mod 4)
-                    End If
-
-                    Time = 5
-                    server.Send([Default].GetBytes(p2dir & "*" & item), [Default].GetByteCount(p2dir & "*" & item), match(0))
-                    server.Send([Default].GetBytes(p1dir & "*" & item), [Default].GetByteCount(p1dir & "*" & item), match(1))
-                    Console.WriteLine("exchanged gameinfo")
+                        Time = 3
+                        ftime = 6
+                        server.Send([Default].GetBytes(p2dir & "*" & item), [Default].GetByteCount(p2dir & "*" & item), match(0))
+                        server.Send([Default].GetBytes(p1dir & "*" & item), [Default].GetByteCount(p1dir & "*" & item), match(1))
+                        Console.WriteLine("exchanged gameinfo")
+                    Catch
+                    End Try
                 Else
                     Dim mess As String = [Default].GetString(server.Receive(client))
                     If mess.StartsWith("CONN") Then
@@ -96,11 +110,12 @@ s:
                             server.Send([Default].GetBytes("2:" & names(0)), [Default].GetByteCount("2:" & names(0)), match(1))
                             server.Send([Default].GetBytes("1:" & names(1)), [Default].GetByteCount("1:" & names(1)), match(0))
                             Console.WriteLine("sent basic info")
-                            Time = 5
+                            Time = 3
+                            ftime = 6
                             thr = New Threading.Thread(AddressOf Update)
                             thr.IsBackground = True
 #If Not Debug Then
-                             thr.Start()
+                            thr.Start()
 #End If
                         End If
                     End If
@@ -119,12 +134,23 @@ s:
         While True
             If Time < 1 And Running Then
                 Try
-                    server.Send([Default].GetBytes("FDISCO"), [Default].GetByteCount("FDISCO"), match(0))
-                Catch
-                End Try
-                Try
-                    server.Send([Default].GetBytes("FDISCO"), [Default].GetByteCount("FDISCO"), match(1))
-                Catch
+                    If ftime >= 0 Then
+                        If getf = -1 Then
+                            server.Send([Default].GetBytes("RESENDPLS"), [Default].GetByteCount("RESENDPLS"), match(0))
+                            server.Send([Default].GetBytes("RESENDPLS"), [Default].GetByteCount("RESENDPLS"), match(1))
+                        Else
+                            server.Send([Default].GetBytes("RESENDPLS"), [Default].GetByteCount("RESENDPLS"), match(getf))
+                        End If
+                        Console.WriteLine("@@@@@RESTORED CONNECTION with " & getf)
+                        ftime -= 1
+                        Time = 4
+                        Continue While
+                    Else
+                        server.Send([Default].GetBytes("FDISCO"), [Default].GetByteCount("FDISCO"), match(0))
+                        server.Send([Default].GetBytes("FDISCO"), [Default].GetByteCount("FDISCO"), match(1))
+                    End If
+                Catch ex As Exception
+                    Console.WriteLine("ERRRRRRRRRRRRRRRRROR" & ex.ToString)
                 End Try
                 Running = False
                 i = 0

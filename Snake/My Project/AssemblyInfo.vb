@@ -8,12 +8,12 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("Snake")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("Snake")> 
+<Assembly: AssemblyTitle("SnakeMP")> 
+<Assembly: AssemblyDescription("SnakeMP2014")> 
+<Assembly: AssemblyCompany("Disa")> 
+<Assembly: AssemblyProduct("SnakeMP")> 
 <Assembly: AssemblyCopyright("Copyright ©  2014")> 
-<Assembly: AssemblyTrademark("")> 
+<Assembly: AssemblyTrademark("Disa")> 
 
 <Assembly: ComVisible(False)>
 
