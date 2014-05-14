@@ -1,5 +1,6 @@
 ﻿Imports System.IO
 Imports System.Windows.Forms
+Imports System.Net
 
 Module MainGame
     Public snake As Snake
@@ -33,6 +34,9 @@ Module MainGame
             thr = New Threading.Thread(AddressOf UpdateSP)
             thr.Start()
         Else
+            If System.IO.File.Exists("conf.txt") Then
+                Server = New IPEndPoint(IPAddress.Parse(System.IO.File.ReadAllText("conf.txt").Split(":")(0)), CInt(System.IO.File.ReadAllText("conf.txt").Split(":")(1)))
+            End If
             isMP = True
             Console.Write("Enter name: ")
             'Items.map.Add(New Item(Rand(0, MainGame.Width), Rand(0, MainGame.Height), 3))

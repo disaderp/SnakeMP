@@ -13,6 +13,9 @@ Module Server
     Dim getf As Integer = -1
     Dim ftime As Integer = 6
     Sub Main()
+        If System.IO.File.Exists("conf.txt") Then
+            server = New UdpClient(CInt(System.IO.File.ReadAllText("conf.txt")))
+        End If
         While True
             Try
                 If Running Then
@@ -25,7 +28,7 @@ f:
                             Continue While
                         End If
                         Console.WriteLine("waiting for 1packet")
-                        client = New IPEndPoint(IPAddress.Any, 8881)                 
+                        client = New IPEndPoint(IPAddress.Any, 8881)
                         mess = [Default].GetString(server.Receive(client))
                         If mess = "END" Then
                             Running = False

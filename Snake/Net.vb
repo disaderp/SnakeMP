@@ -7,7 +7,7 @@ Module Net
 #If DEBUG Then
     Dim server As New IPEndPoint(IPAddress.Parse("127.0.0.1"), 8881)
 #Else
-    Dim server As New IPEndPoint(IPAddress.Parse("188.116.56.69"), 8881)
+    Public Server As New IPEndPoint(IPAddress.Parse("188.116.56.69"), 8881)
 #End If
     Dim ep As IPEndPoint
     Public Wait As Boolean = False
